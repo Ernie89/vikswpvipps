@@ -1,0 +1,108 @@
+Changelog
+6.1.0 - 2024-04-23
+- Removed CURLOPT_CAINFO in the client
+
+6.0.0 - 2023-04-17
+Added
+- Checkout v3 classes and methods
+- Add `setImplementation()` and `getImplementation()` for Paymentorder
+- Add classes `TransactionCancelV3`, `TransactionCaptureV3`, `TransactionReversalV3`
+- Add methods `getFirstName()`, `setFirstName()`, `getLastName()`, `setLastName()`, `getDigitalProducts()`, `setDigitalProducts()`, `getShippingAddressRestrictedToCountryCodes()`, `setShippingAddressRestrictedToCountryCodes()` in `PaymentorderPayer`
+
+5.6.0 - 2023-04-07
+Added
+- Add `setProductName()` and `getProductName()` for Paymentorder
+
+Changelog
+5.5.0 - 2023-03-11
+Added
+- Add UnscheduledPurchase for Paymentorder
+
+5.4.1 - 2022-10-15
+Fixed
+- Fix deprecated warning in PHP 8
+
+5.4.0 - 2022-08-15
+Fixed
+- Fix ArrayAccess deprecation notices on php 8.1
+
+5.3.0 - 2022-06-15
+Changed
+- System User Agent Fixes
+- Access Token masking in debug
+
+5.2.0 - 2022-02-21
+Changed
+- Fixes for Windows Platform
+- Update cacert.pem
+
+5.1.0 - 2021-11-23
+Added
+- Add RestrictedToInstruments
+- Add codeception tests
+
+Changed
+- Remove invalid usage of sprintf under PHP 8
+- Change token name in exception message
+- Suppress PHP warnings on is_readable
+
+5.0.1 - 2021-08-31
+Added
+- PaymentorderPayeeInfo: getSubsite(), setSubsite()
+
+Changed
+- Updated `VerificationObject` class
+- Updated `VerificationObjectInterface` interface
+
+5.0.0 - 2021-06-04
+Added
+- PaymentCardholder: getBillingAddress(), setBillingAddress(), getAccountInfo(), setAccountInfo()
+- PaymentPurchase: getRecurrenceToken(), setRecurrenceToken(), isGenerateRecurrenceToken(), setGenerateRecurrenceToken()
+- PaymentRecur: getRecurrenceToken(), setRecurrenceToken()
+- PaymentVerify: isGeneratePaymentToken(), setGeneratePaymentToken(), isGenerateRecurrenceToken(), setGenerateRecurrenceToken()
+- Paymentorder: isGenerateUnscheduledToken(), setGenerateUnscheduledToken(), getRecurrenceToken(), setRecurrenceToken()
+- `CardholderAccountInfo` class
+- `PaymentPrefillInfo` class
+- Added resources for Transaction in Payment response if it's expanded
+- Added expands to build request endpoint
+
+Changed
+- Updated `Recur` class
+- Updated `PaymentorderMetadata` class
+- Renamed `CardholderShippingAddress` class to `CardholderAddress` class
+
+4.0.1 - 2021-02-12
+Added
+- Add InitiatingSystemUserAgent for `Payment`
+- Add InitiatingSystemUserAgent for `Paymentorder`
+
+4.0.0 - 2020-12-15
+Added
+- Implemented classes which allows to test api credentials `Test`
+- Support for MobilePay
+- Support for Trustly
+- Support for `metadata`
+- 3-D Secure 2 fields to the SDK
+- `setOperationRel()` and `getOperationRel()` for `Request` class
+- `getPayerReference()` and `setPayerReference()` methods for `Paymentorder` class
+- `Metadata` class
+- `setReceiptReference()` and `getReceiptReference()` for `CaptureInterface` of Invoice
+- Cardholder & RiskIndicator resources for Card payments
+- RiskIndicator field to Paymentorder resource
+- Payer & RiskIndicator resources for 3D Secure 2
+- OrderItems, PaymentUrl & improves functionalities
+
+Changed
+- Renamed `setMerchantToken()` to `setAccessToken()` of `Client` class
+- Got rid of the direct url building
+- Added http code to `Exception` code
+- Fixed a bug in `prefillInfo`.
+- Added back the `Response` class that was removed before
+- Removed `CreateAuthorization` for Vipps
+
+3.4.0 - 2019-10-08
+Added
+- Adds request resources for creditcard, invoice, swish and vipps payment methods
+
+Changed
+- Reworked payment transactions resources for supporting 1-phase payments
