@@ -109,8 +109,7 @@ abstract class AbstractVippsMobilePayPayment extends JPayment
             $token = $this->fetchAccessToken();
             $payment = $this->vippsRequest('GET', '/epayment/v1/payments/' . rawurlencode($reference), $token);
 
-            $stateList = isset($payment['body']['state']) && is_array($payment['body']['state']) ? $payment['body']['state'] : array();
-            $isAuthorized = in_array('AUTHORIZED', $stateList, true) || in_array('CAPTURED', $stateList, true);
+            $isAuthorized = $this->hasPaymentState($payment['body'], array('AUTHORIZED', 'CAPTURED'));
 
             if (!$isAuthorized) {
                 $status->appendLog('Vipps MobilePay: payment not authorized yet.');
@@ -230,8 +229,7 @@ abstract class AbstractVippsMobilePayPayment extends JPayment
         try {
             $token = $this->fetchAccessToken();
             $payment = $this->vippsRequest('GET', '/epayment/v1/payments/' . rawurlencode($reference), $token);
-            $stateList = isset($payment['body']['state']) && is_array($payment['body']['state']) ? $payment['body']['state'] : array();
-            $isAuthorized = in_array('AUTHORIZED', $stateList, true) || in_array('CAPTURED', $stateList, true);
+            $isAuthorized = $this->hasPaymentState($payment['body'], array('AUTHORIZED', 'CAPTURED'));
 
             if ($isAuthorized) {
                 $amount = isset($payment['body']['amount']['value']) ? (int) $payment['body']['amount']['value'] : 0;
@@ -241,8 +239,7 @@ abstract class AbstractVippsMobilePayPayment extends JPayment
             }
 
             $verificationPayment = $this->vippsRequest('GET', '/epayment/v1/payments/' . rawurlencode($reference), $token);
-            $verifiedStates = isset($verificationPayment['body']['state']) && is_array($verificationPayment['body']['state']) ? $verificationPayment['body']['state'] : array();
-            $result = in_array('CAPTURED', $verifiedStates, true) || in_array('AUTHORIZED', $verifiedStates, true);
+            $result = $this->hasPaymentState($verificationPayment['body'], array('CAPTURED', 'AUTHORIZED'));
             $this->complete($result ? 1 : 0);
         } catch (\Throwable $e) {
             $this->complete(0);
@@ -275,6 +272,37 @@ abstract class AbstractVippsMobilePayPayment extends JPayment
         }
 
         return $capture;
+    }
+
+    protected function hasPaymentState(array $payment, array $acceptedStates)
+    {
+        if (!isset($payment['state'])) {
+            return false;
+        }
+
+        $normalizedAccepted = array_map('strtoupper', $acceptedStates);
+        $state = $payment['state'];
+
+        if (is_string($state)) {
+            return in_array(strtoupper($state), $normalizedAccepted, true);
+        }
+
+        if (is_array($state)) {
+            foreach ($state as $value) {
+                if (is_string($value) && in_array(strtoupper($value), $normalizedAccepted, true)) {
+                    return true;
+                }
+                if (is_array($value)) {
+                    foreach ($value as $nestedValue) {
+                        if (is_string($nestedValue) && in_array(strtoupper($nestedValue), $normalizedAccepted, true)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     protected function extractReference(array $data)
