@@ -2,9 +2,9 @@
 /*
 Plugin Name:  VikVippsMobilePay
 Description:  Vipps MobilePay integration to collect payments through the Vik plugins
-Version:      1.0.0
-Author:       Khalil Farah.
-Author URI:   https://www.fiverr.com/khalilfareh
+Version:      1.0.1
+Author:       Nuna Media Designs
+Author URI:   https://nunamedia.net
 License:      GPL2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  vikvippsmobilepay
@@ -18,7 +18,7 @@ defined('ABSPATH') or die('No script kiddies please!');
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'utils.php';
 define('VIKVIPPSMOBILEPAY_LANG', basename(dirname(__FILE__)).DIRECTORY_SEPARATOR.'languages');
 
-define('VIKVIPPSMOBILEPAY_VERSION', '1.0.0');
+define('VIKVIPPSMOBILEPAY_VERSION', '1.0.1');
 
 add_action('init', function () {
     JFactory::getLanguage()->load('vikvippsmobilepay', VIKVIPPSMOBILEPAY_LANG);
