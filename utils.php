@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     VikSwedBankPay
+ * @package     VikVippsMobilePay
  * @subpackage  core
  * @author      Khalil Fareh.
  * @copyright   Copyright (C) 2018 VikWP All rights reserved.
@@ -12,9 +12,9 @@
 defined('ABSPATH') or die('No script kiddies please!');
 
 // Define plugin base path
-define('VIKSWEDBANKPAY_DIR', dirname(__FILE__));
+define('VIKVIPPSMOBILEPAY_DIR', dirname(__FILE__));
 // Define plugin base URI
-define('VIKSWEDBANKPAY_URI', plugin_dir_url(__FILE__));
+define('VIKVIPPSMOBILEPAY_URI', plugin_dir_url(__FILE__));
 
 /**
  * Imports the file of the gateway and returns the classname
@@ -24,15 +24,15 @@ define('VIKSWEDBANKPAY_URI', plugin_dir_url(__FILE__));
  *
  * @return 	mixed 	The classname of the payment if exists, otherwise false.
  */
-function vikswedbankpay_load_payment($plugin)
+function vikvippsmobilepay_load_payment($plugin)
 {
-	if (!JLoader::import("{$plugin}.swedbankpay", VIKSWEDBANKPAY_DIR))
+	if (!JLoader::import("{$plugin}.vippsmobilepay", VIKVIPPSMOBILEPAY_DIR))
 	{
 		// there is not a version available for the given plugin
 		return false;
 	}
 
-	return ucwords($plugin) . 'SwedbankpayPayment';
+	return 'VikBookingVippsMobilePayPayment';
 }
 
 /**
@@ -42,9 +42,9 @@ function vikswedbankpay_load_payment($plugin)
  *
  * @return 	mixed 	The path if exists, otherwise false.
  */
-function vikswedbankpay_get_payment_path($plugin)
+function vikvippsmobilepay_get_payment_path($plugin)
 {
-	$path = VIKSWEDBANKPAY_DIR . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'swedbankpay.php';
+	$path = VIKVIPPSMOBILEPAY_DIR . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'vippsmobilepay.php';
 
 	if (!is_file($path))
 	{

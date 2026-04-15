@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     VikSwedBankPay
+ * @package     VikVippsMobilePay
  * @subpackage  vikbooking
  * @author      khalil fareh.
  * @copyright   Copyright (C) 2018 VikWP All rights reserved.
@@ -10,13 +10,13 @@
 
 defined('ABSPATH') or die('No script kiddies please!');
 
-JLoader::import('swedbankpay', VIKSWEDBANKPAY_DIR);
+JLoader::import('vippsmobilepay', VIKVIPPSMOBILEPAY_DIR);
 
 // Prepend the deposit message before the payment form (only if specified).
 add_action('payment_after_begin_transaction_vikbooking', function(&$payment, &$html)
 {
-	// make sure the driver is swedbankpay
-	if (!$payment->isDriver('swedbankpay'))
+	// make sure the driver is vippsmobilepay
+	if (!$payment->isDriver('vippsmobilepay'))
 	{
 		return;
 	}
@@ -38,14 +38,14 @@ add_action('payment_after_begin_transaction_vikbooking', function(&$payment, &$h
 
 
 	// save the total to pay within a transient (should not work on a multisite, try using `set_site_transient`)
-	$transient = set_transient('vikswedbankpay_vikbooking_' . $payment->get('oid') . '_' . $payment->get('sid'), $payment->get('total_to_pay'), 10 * MINUTE_IN_SECONDS);
+	$transient = set_transient('vikvippsmobilepay_vikbooking_' . $payment->get('oid') . '_' . $payment->get('sid'), $payment->get('total_to_pay'), 10 * MINUTE_IN_SECONDS);
 
 // restore cache flag
 	wp_using_ext_object_cache($was_using_cache);
 	//if transient saving fails
 	if(!$transient){
 		$txname = $payment->get('sid') . '-' . $payment->get('oid') . '.tx';
-		$fp = fopen(VIKSWEDBANKPAY_DIR . DIRECTORY_SEPARATOR . 'vikbooking' . DIRECTORY_SEPARATOR . $txname , 'w+');
+		$fp = fopen(VIKVIPPSMOBILEPAY_DIR . DIRECTORY_SEPARATOR . 'vikbooking' . DIRECTORY_SEPARATOR . $txname , 'w+');
 		fwrite($fp, $payment->get('total_to_pay'));
 		fclose($fp);
 	}
@@ -54,15 +54,15 @@ add_action('payment_after_begin_transaction_vikbooking', function(&$payment, &$h
 /// Retrieve the total amount  from the static transaction file.
 add_action('payment_before_validate_transaction_vikbooking', function($payment)
 {
-	// make sure the driver is SwedBankPay
-	if (!$payment->isDriver('swedbankpay'))
+	// make sure the driver is Vipps MobilePay
+	if (!$payment->isDriver('vippsmobilepay'))
 	{
 		return;
 	}
 	$txname = $payment->get('sid') . '-' . $payment->get('oid') . '.tx';
 	$txdata = '';
 
-	$path = VIKSWEDBANKPAY_DIR . DIRECTORY_SEPARATOR . 'vikbooking' . DIRECTORY_SEPARATOR . $txname;
+	$path = VIKVIPPSMOBILEPAY_DIR . DIRECTORY_SEPARATOR . 'vikbooking' . DIRECTORY_SEPARATOR . $txname;
 	/**
 	 * Force the system to avoid using the cache for transient.
 	 * The previous value will be reset after terminating the callback.
@@ -70,7 +70,7 @@ add_action('payment_before_validate_transaction_vikbooking', function($payment)
 	 */
 	$was_using_cache = wp_using_ext_object_cache(false);
 
-	$transient = 'vikswedbankpay_vikbooking_' . $payment->get('oid') . '_' . $payment->get('sid');
+	$transient = 'vikvippsmobilepay_vikbooking_' . $payment->get('oid') . '_' . $payment->get('sid');
 
 	// get session ID from transient (should not work on a multisite, try using `get_site_transient`)
 	$data = get_transient($transient);
@@ -116,8 +116,8 @@ add_action('payment_before_validate_transaction_vikbooking', function($payment)
 // Use this hook to construct it and route it following the shortcodes standards.
 add_action('payment_on_after_validation_vikbooking', function(&$payment, $res)
 {
-	// make sure the driver is swedbankpay
-	if (!$payment->isDriver('swedbankpay'))
+	// make sure the driver is vippsmobilepay
+	if (!$payment->isDriver('vippsmobilepay'))
 	{
 		return;
 	}
@@ -138,11 +138,11 @@ add_action('payment_on_after_validation_vikbooking', function(&$payment, $res)
 
 /**
  * This class is used to collect payments in VikBooking plugin
- * by using the swedbankpay gateway.
+ * by using the Vipps MobilePay gateway.
  *
  * @since 1.0
  */
-class VikBookingSwedBankPayPayment extends AbstractSwedBankPayPayment
+class VikBookingVippsMobilePayPayment extends AbstractVippsMobilePayPayment
 {
 	/**
 	 * @override
